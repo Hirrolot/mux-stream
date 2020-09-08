@@ -19,3 +19,6 @@ mux-stream-macros = "0.1"
 tokio = { version = "0.2", features = ["rt-core", "rt-threaded", "sync", "stream", "macros"] }
 futures = "0.3"
 log = { version = "0.4", optional = true }
+
+[package.metadata."docs.rs"]
+all-features = true
