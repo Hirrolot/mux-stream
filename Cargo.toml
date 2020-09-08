@@ -3,7 +3,16 @@ name = "mux-stream"
 version = "0.1.0"
 authors = ["Temirkhan Myrzamadi <hirrolot@gmail.com>"]
 edition = "2018"
+description = "(De)multiplexing for Rusty streams"
+license = "MIT"
+categories = ["Asynchronous", "Rust patterns"]
+keywords = ["async", "futures", "tokio", "multiplex", "demultiplex"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+mux-stream-macros = "0.1.0"
+
+[dev-dependencies]
+tokio = { version = "0.2", features = ["rt-core", "rt-threaded", "sync", "stream", "macros"] }
+futures = "0.3"
