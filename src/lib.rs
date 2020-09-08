@@ -4,6 +4,9 @@
 
 #![deny(unsafe_code)]
 
+use futures::{future::BoxFuture, FutureExt};
+use tokio::sync::mpsc::error::SendError;
+
 /// Multiplexes several streams into one.
 ///
 /// Accepts a non-empty list of paths to variants of an enumeration, possibly
@@ -20,7 +23,7 @@
 /// from all the provided input streams (in a separate [Tokio task]).
 ///
 /// ```
-/// use mux_stream_macros::mux;
+/// use mux_stream::{mux, panicking};
 ///
 /// use std::{collections::HashSet, iter::FromIterator};
 ///
@@ -41,17 +44,11 @@
 /// let u8_values = HashSet::from_iter(vec![88]);
 /// let str_values = HashSet::from_iter(vec!["Hello", "ABC"]);
 ///
-/// let result: UnboundedReceiver<MyEnum> =
-///     mux!(MyEnum::A, MyEnum::B, MyEnum::C)(Box::new(|error| {
-///         async move {
-///             dbg!(error);
-///         }
-///         .boxed()
-///     }))(
-///         stream::iter(i32_values.clone()).boxed(),
-///         stream::iter(u8_values.clone()).boxed(),
-///         stream::iter(str_values.clone()).boxed(),
-///     );
+/// let result: UnboundedReceiver<MyEnum> = mux!(MyEnum::A, MyEnum::B, MyEnum::C)(panicking())(
+///     stream::iter(i32_values.clone()).boxed(),
+///     stream::iter(u8_values.clone()).boxed(),
+///     stream::iter(str_values.clone()).boxed(),
+/// );
 ///
 /// let (i32_results, u8_results, str_results) = result
 ///     .fold(
@@ -82,8 +79,8 @@
 /// [Tokio task]: https://docs.rs/tokio/latest/tokio/task/index.html
 #[macro_export]
 macro_rules! mux {
-    ($($variant:path),+ [,]) => {
-        mux_stream_macros::demux!($($variant),+)
+    ($($input:tt)+) => {
+        mux_stream_macros::mux!($($input)+)
     };
 }
 
@@ -116,7 +113,7 @@ macro_rules! mux {
 ///
 /// # Example
 /// ```
-/// use mux_stream::demux;
+/// use mux_stream::{demux, panicking};
 ///
 /// use futures::{future::FutureExt, StreamExt};
 /// use tokio::stream;
@@ -139,12 +136,7 @@ macro_rules! mux {
 /// ]);
 ///
 /// let (mut i32_stream, mut f64_stream, mut str_stream) =
-///     demux!(MyEnum::A, MyEnum::B, MyEnum::C)(Box::new(|error| {
-///         async move {
-///             dbg!(error);
-///         }
-///         .boxed()
-///     }))(stream.boxed());
+///     demux!(MyEnum::A, MyEnum::B, MyEnum::C)(panicking())(stream.boxed());
 ///
 /// assert_eq!(i32_stream.next().await, Some(123));
 /// assert_eq!(i32_stream.next().await, Some(811));
@@ -166,4 +158,43 @@ macro_rules! demux {
     ($($input:tt)+) => {
         mux_stream_macros::demux!($($input)+)
     };
+}
+
+#[macro_use]
+mod private_macros {
+    macro_rules! ErrorHandlerRetTy {
+        () => {
+            Box<dyn Fn(SendError<T>) -> BoxFuture<'static, ()> + Send + Sync + 'static>
+        };
+    }
+}
+
+/// A panicking error handler.
+pub fn panicking<T>() -> ErrorHandlerRetTy!()
+where
+    T: Send + 'static,
+{
+    Box::new(|error| async move { panic!(error) }.boxed())
+}
+
+/// An error handler that ignores an error.
+pub fn ignoring<T>() -> ErrorHandlerRetTy!()
+where
+    T: Send + 'static,
+{
+    Box::new(|_error| async move {}.boxed())
+}
+
+/// A panicking error handler.
+#[cfg(feature = "logging")]
+pub fn logging<T>() -> ErrorHandlerRetTy!()
+where
+    T: Send + 'static,
+{
+    Box::new(|error| {
+        async move {
+            log::error!("{}", error);
+        }
+        .boxed()
+    })
 }
