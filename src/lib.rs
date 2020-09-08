@@ -13,14 +13,24 @@ use tokio::sync::mpsc::error::SendError;
 /// with a trailing comma. All enumeration variants shall be defined as variants
 /// taking a single unnamed parameter.
 ///
-/// Expands to a closure that has the same number of formal arguments as the
-/// number of paths specified; each one must implement [`Stream<T>`], where `T`
-/// is a type of a single unnamed parameter of the corresponding variant. This
-/// closure returns [`tokio::sync::mpsc::UnboundedReceiver`] of your enumeration
-/// type.
+/// Expands to:
+///
+/// ```ignore
+/// |error_handler: Box<dyn Fn(tokio::sync::mpsc::error::SendError<_>) -> futures::future::BoxFuture<'static, ()> + Send + Sync + 'static>| {
+///     |input_stream0: futures::stream::BoxStream<'static, _>, ...  | { /* ... */ }
+/// }
+/// ```
+///
+/// Thus, the returned closure is [curried]. After applying the first argument
+/// to it, you obtain a closure of as many formal arguments as variants
+/// specified, each parameterised by the corresponding type of variant's
+/// parameter. After applying the second argument, you obtain
+/// [`UnboundedReceiver`] of your enumeration type.
 ///
 /// It propagates updates into the result stream in any order, simultaneously
-/// from all the provided input streams (in a separate [Tokio task]).
+/// from all the provided input streams (in a separate [Tokio task]). Updates
+/// into the output stream are being redirected as long as at least one input
+/// stream is active.
 ///
 /// ```
 /// use mux_stream::{mux, panicking};
@@ -74,8 +84,8 @@ use tokio::sync::mpsc::error::SendError;
 /// Hash sets are used here owing to the obvious absence of order preservation
 /// of updates from input streams.
 ///
-/// [`Stream<T>`]: https://docs.rs/futures/latest/futures/stream/trait.Stream.html
-/// [`tokio::sync::mpsc::UnboundedReceiver`]: https://docs.rs/tokio/latest/tokio/sync/mpsc/struct.UnboundedReceiver.html
+/// [curried]: https://en.wikipedia.org/wiki/Currying
+/// [`UnboundedReceiver`]: https://docs.rs/tokio/latest/tokio/sync/mpsc/struct.UnboundedReceiver.html
 /// [Tokio task]: https://docs.rs/tokio/latest/tokio/task/index.html
 #[macro_export]
 macro_rules! mux {
@@ -84,11 +94,13 @@ macro_rules! mux {
     };
 }
 
-/// Demultiplexes a stream into several others with a custom error handler.
+/// Demultiplexes a stream into several others.
 ///
 /// Accepts a non-empty list of paths to variants of an enumeration, possibly
 /// with a trailing comma. All enumeration variants shall be defined as variants
-/// taking a single unnamed parameter.
+/// taking a single unnamed parameter. `..` can be prepended to an input list if
+/// you wish non-exhaustive demultiplexing (e.g. just ignore unspecified
+/// variants).
 ///
 /// Expands to:
 ///
@@ -99,17 +111,17 @@ macro_rules! mux {
 /// ```
 ///
 /// Thus, the returned closure is [curried]. After applying two arguments to it
-/// (`(...)(...)`), you obtain a future of type
-/// `(tokio::sync::mpsc::UnboundedReceiver<T[1]>, ...,
-/// tokio::sync::mpsc::UnboundedReceiver<T[n]>)`, where `T[i]` is a type of a
-/// single unnamed parameter of the corresponding provided variant.
+/// (`(...)(...)`), you obtain `(tokio::sync::mpsc::UnboundedReceiver<T[1]>,
+/// ..., tokio::sync::mpsc::UnboundedReceiver<T[n]>)`, where `T[i]` is a type of
+/// a single unnamed parameter of the corresponding provided variant.
 ///
 /// `input_stream` is a stream of your enumeration to be demiltiplexed. Each
 /// coming update from `input_stream` will be pushed into the corresponding
 /// output stream immediately, in a separate [Tokio task].
 ///
 /// `error_handler` is invoked when a demultiplexer fails to send an update
-/// from `input_stream` into one of receivers.
+/// from `input_stream` into one of receivers. See also [our default error
+/// handlers].
 ///
 /// # Example
 /// ```
@@ -153,6 +165,7 @@ macro_rules! mux {
 ///
 /// [curried]: https://en.wikipedia.org/wiki/Currying
 /// [Tokio task]: https://docs.rs/tokio/latest/tokio/task/index.html
+/// [our default error handlers]: https://docs.rs/mux-stream
 #[macro_export]
 macro_rules! demux {
     ($($input:tt)+) => {
@@ -185,7 +198,7 @@ where
     Box::new(|_error| async move {}.boxed())
 }
 
-/// A panicking error handler.
+/// A logging error handler.
 #[cfg(feature = "logging")]
 pub fn logging<T>() -> ErrorHandlerRetTy!()
 where
