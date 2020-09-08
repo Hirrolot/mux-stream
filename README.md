@@ -30,7 +30,7 @@ This crate empahises the [first-class] nature of [asynchronous streams] in Rust 
 Given `Stream<T1 | ... | Tn>`, demultiplexing produces `Stream<T1>, ..., Stream<Tn>`. See the illustration below, in which every circle is an item of a stream and has a type (its colour):
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/images/DEMUX.png" />
+    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/DEMUX.png" />
 </div>
 
 That is, once an update from an input stream is available, it's pushed into the corresponding output stream in a separate [Tokio task]. No output stream can slow down another one.
@@ -81,7 +81,7 @@ assert_eq!(str_stream.next().await, None);
 Multiplexing is the opposite of demultiplexing: given `Stream<T1>, ..., Stream<Tn>`, it produces `Stream<T1 | ... | Tn>`. Again, the process is illustrated below:
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/images/MUX.png" />
+    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/MUX.png" />
 </div>
 
 That is, once an update from any input streams is available, it's pushed into the output stream. Again, this work is performed asynchronously in a separate [Tokio task].
