@@ -4,25 +4,22 @@ use derive_more::From;
 use futures::{Stream, StreamExt};
 use tokio::stream;
 
-#[derive(Debug, From)]
+#[derive(From)]
 enum AdminUpdate {
     RegisterUser(RegisterUserUpdate),
     DeleteUser(DeleteUserUpdate),
     PinMessage(PinMessageUpdate),
 }
 
-#[derive(Debug)]
 struct RegisterUserUpdate {
     username: String,
     id: i64,
 }
 
-#[derive(Debug)]
 struct DeleteUserUpdate {
     id: i64,
 }
 
-#[derive(Debug)]
 struct PinMessageUpdate {
     message: String,
 }
