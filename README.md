@@ -21,9 +21,59 @@ This crate empahises the [first-class] nature of [asynchronous streams] in Rust 
 
 ## Table of contents
 
+ - [Motivation](#motivation)
  - [Demultiplexing](#demultiplexing)
  - [Multiplexing](#multiplexing)
  - [FAQ](#faq)
+
+## Motivation
+
+In many problem domains, we encounter a situation where the ability to process incoming hierarchical structures is required. Suppose you're writing a social network, and the following kinds of updates might come at any moment:
+
+<div align="center">
+    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/UPDATE_HIERARCHY.png" />
+</div>
+
+In terms of Rust, you might want to express such updates via [sum types]:
+
+```rust
+enum UserReq {
+    SendMessage(SendMessageReq),
+    Follow(FollowReq),
+    MuteFriend(MuteFriendReq)
+}
+
+enum SendMessageReq {
+    Photo(...),
+    Video(...),
+    Text(...)
+}
+
+struct FollowReq {
+    ...
+}
+
+enum MuteFriendReq {
+    Forever(...),
+    ForInterval(...)
+}
+```
+
+This is where the story begins: now you need to process user requests. Let's formulate some general requirements of requests-processing code:
+
+ - **Conciseness.** Avoid boilerplate where possible. Life is too short to write boilerplate code.
+ - [**Single-responsibility principle (SRP).**](https://en.wikipedia.org/wiki/Single-responsibility_principle) For our needs it means that each processor must be responsible for exactly one kind of request. No less and no more.
+ - **Compatible with other Rusty code.** Our requests-processing solution must be able to be easily integrated into existing code bases.
+ - **Stay Rusty.** [eDSLs] implemented via macros are fun, but be ready for confusing compilation errors when business logic is expressed in terms of such eDSLs. What is more, they are computer languages on their own -- it takes some time to become familiar with them.
+ - **Type safety.** Do not spread the pain of upcasting/downcasting types that you're already aware of.
+
+This crate provides the means to dispatch hierarchical updates, accommodating all of the requirements above. It's based upon the [functional reactive paradigm] (a declarative paradigm concerned with asynchronous data streams). This is accomplished by augmenting asynchronous streams with [patten matching], so you code would reflect the following structure (concerning with the example of a social network):
+
+
+
+[eDSLs]: https://en.wikipedia.org/wiki/Domain-specific_language
+[sum types]: https://en.wikipedia.org/wiki/Tagged_union
+[functional reactive paradigm]: https://en.wikipedia.org/wiki/Functional_reactive_programming
 
 ## Demultiplexing
 
