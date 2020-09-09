@@ -33,7 +33,6 @@ In many problem domains, we encounter the need to process incoming hierarchical 
 <div align="center">
     <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/UPDATE_HIERARCHY.png" />
 </div>
-
 <br>
 
 In terms of Rust, you might want to express such updates via [sum types]:
@@ -81,6 +80,7 @@ This crate addresses the problem of dispatching hierarchical updates, accommodat
 <div align="center">
     <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/STREAM_UPDATE_DISPATCH_STRUCTURE.png" />
 </div>
+<br>
 
 That is, each function takes a stream of updates and propagates (demultiplexes, pattern matches) them into processors of lower layers, and hence addressing the single-responsibility principle. What is more, you're able to use all the power of [stream adaptors], which let you deal with updates as with chains, not as with single objects, declaratively.
 
