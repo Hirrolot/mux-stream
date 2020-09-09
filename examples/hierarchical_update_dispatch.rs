@@ -34,14 +34,9 @@ async fn main() {
     ]);
 
     use AdminUpdate::*;
-    let (register_users_updates, delete_users_updates, pin_messages_updates) =
-        demux!(RegisterUser, DeleteUser, PinMessage)(panicking())(updates.boxed());
+    let updates = demux!(RegisterUser, DeleteUser, PinMessage)(panicking())(updates.boxed());
 
-    tokio::join!(
-        register_users(register_users_updates),
-        delete_users(delete_users_updates),
-        pin_messages(pin_messages_updates)
-    );
+    tokio::join!(register_users(updates.0), delete_users(updates.1), pin_messages(updates.2));
 }
 
 // There is exactly one processor for each update kind, reflecting the
