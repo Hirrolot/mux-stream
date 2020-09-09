@@ -68,7 +68,7 @@ This is where the story begins: now you need to process user requests. Let's for
  - [**Single-responsibility principle (SRP).**](https://en.wikipedia.org/wiki/Single-responsibility_principle) For our needs it means that each processor must be responsible for exactly one kind of request. No less and no more.
  - **Compatible with other Rusty code.** Our requests-processing solution must be able to be easily integrated into existing code bases.
  - **Stay Rusty.** [eDSLs] implemented via macros are fun, but be ready for confusing compilation errors when business logic is expressed in terms of such eDSLs. What is more, they are computer languages on their own -- it takes some time to become familiar with them.
- - **Type safety.** Do not spread the pain of upcasting/downcasting types that you're already aware of.
+ - **Type safety.** Do not spread the pain of upcasting/downcasting types you're already aware of.
 
 This crate addresses the problem of dispatching hierarchical updates, accommodating all of the requirements above. The approach is based upon the [functional reactive paradigm], a declarative paradigm concerned with asynchronous data streams. Augmenting asynchronous streams with [pattern matching], your code would reflect the following structure (concerning with the example of a social network):
 
