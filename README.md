@@ -173,7 +173,6 @@ enum MyEnum {
     C(&'static str),
 }
 
-
 let i32_values = HashSet::from_iter(vec![123, 811]);
 let u8_values = HashSet::from_iter(vec![88]);
 let str_values = HashSet::from_iter(vec!["Hello", "ABC"]);
