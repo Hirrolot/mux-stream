@@ -35,7 +35,10 @@ In many problem domains, we encounter the need to process incoming hierarchical 
 </div>
 
 <br>
+
 In terms of Rust, you might want to express such updates via [sum types]:
+
+[sum types]: https://en.wikipedia.org/wiki/Tagged_union
 
 ```rust
 enum UserReq {
@@ -75,8 +78,8 @@ This crate addresses the problem of dispatching hierarchical updates, accommodat
 </div>
 
 [eDSLs]: https://en.wikipedia.org/wiki/Domain-specific_language
-[sum types]: https://en.wikipedia.org/wiki/Tagged_union
 [functional reactive paradigm]: https://en.wikipedia.org/wiki/Functional_reactive_programming
+[pattern matching]: https://en.wikipedia.org/wiki/Pattern_matching
 
 ## Demultiplexing
 
