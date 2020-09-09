@@ -86,7 +86,7 @@ That is, each function takes a stream of updates and propagates (demultiplexes, 
 
 [stream adaptors]: https://docs.rs/futures/0.3.5/futures/stream/trait.StreamExt.html
 
-The following sections present the _demultiplexing_ & _multiplexing_ operations on streams, providing some explanatory examples. See [`examples/hierarchical_update_dispatch.rs`] as code demonstrating the most prominent aspects of the paradigm.
+The following sections present the _demultiplexing_ & _multiplexing_ operations on streams, providing some explanatory examples. See also [`examples/hierarchical_update_dispatch.rs`], a well-documented demonstration of the most prominent aspects of the paradigm.
 
 [`examples/hierarchical_update_dispatch.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/hierarchical_update_dispatch.rs
 
