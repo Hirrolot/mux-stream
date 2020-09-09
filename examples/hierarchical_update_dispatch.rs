@@ -33,10 +33,9 @@ async fn main() {
         DeleteUserUpdate { id: 1414 }.into(),
     ]);
 
+    use AdminUpdate::*;
     let (register_users_updates, delete_users_updates, pin_messages_updates) =
-        demux!(AdminUpdate::RegisterUser, AdminUpdate::DeleteUser, AdminUpdate::PinMessage)(
-            panicking(),
-        )(updates.boxed());
+        demux!(RegisterUser, DeleteUser, PinMessage)(panicking())(updates.boxed());
 
     tokio::join!(
         register_users(register_users_updates),
