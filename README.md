@@ -82,6 +82,10 @@ This crate addresses the problem of dispatching hierarchical updates, accommodat
 </div>
 <br>
 
+(Note the similarities with the [chain-of-responsibility pattern].)
+
+[chain-of-responsibility pattern]: https://en.wikipedia.org/wiki/Chain-of-responsibility_pattern
+
 That is, each function takes a stream of updates and propagates (demultiplexes, pattern matches) them into processors of lower layers, and hence addressing the single-responsibility principle. What is more, you're able to use all the power of [stream adaptors], which let you deal with updates as with chains, not as with single objects, declaratively.
 
 [stream adaptors]: https://docs.rs/futures/0.3.5/futures/stream/trait.StreamExt.html
