@@ -73,13 +73,14 @@ This is where the story begins: now you need to process user requests. Let's for
 
 This crate addresses the problem of dispatching hierarchical updates, accommodating all of the requirements above. The approach is based upon the [functional reactive paradigm], a declarative paradigm concerned with asynchronous data streams. Augmenting asynchronous streams with [patten matching], your code would reflect the following structure (concerning with the example of a social network):
 
-<div align="center">
-    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/STREAM_UPDATE_DISPATCH_STRUCTURE.png" />
-</div>
 
 [eDSLs]: https://en.wikipedia.org/wiki/Domain-specific_language
 [functional reactive paradigm]: https://en.wikipedia.org/wiki/Functional_reactive_programming
 [pattern matching]: https://en.wikipedia.org/wiki/Pattern_matching
+
+<div align="center">
+    <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/STREAM_UPDATE_DISPATCH_STRUCTURE.png" />
+</div>
 
 ## Demultiplexing
 
