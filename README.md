@@ -28,7 +28,7 @@ This crate empahises the [first-class] nature of [asynchronous streams] in Rust 
 
 ## Motivation
 
-In many problem domains, we encounter a situation where the ability to process incoming hierarchical structures is required. Suppose you're writing a social network, and the following kinds of updates might come at any moment:
+In many problem domains, we encounter the need to process incoming hierarchical structures. Suppose you're writing a social network, and the following kinds of updates might come at any moment:
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/UPDATE_HIERARCHY.png" />
