@@ -34,6 +34,7 @@ In many problem domains, we encounter the need to process incoming hierarchical 
     <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/UPDATE_HIERARCHY.png" />
 </div>
 
+
 In terms of Rust, you might want to express such updates via [sum types]:
 
 ```rust
