@@ -39,12 +39,12 @@ In terms of Rust, you might want to express such updates via [sum types]:
 
 ```rust
 enum UserReq {
-    SendMessage(SendMessageReq),
+    SendMsg(SendMsgReq),
     Follow(FollowReq),
     MuteFriend(MuteFriendReq)
 }
 
-enum SendMessageReq {
+enum SendMsgReq {
     Photo(...),
     Video(...),
     Text(...)
@@ -68,7 +68,7 @@ This is where the story begins: now you need to process user requests. Let's for
  - **Stay Rusty.** [eDSLs] implemented via macros are fun, but be ready for confusing compilation errors when business logic is expressed in terms of such eDSLs. What is more, they are computer languages on their own -- it takes some time to become familiar with them.
  - **Type safety.** Do not spread the pain of upcasting/downcasting types that you're already aware of.
 
-This crate provides the means to dispatch hierarchical updates, accommodating all of the requirements above. It's based upon the [functional reactive paradigm] (a declarative paradigm concerned with asynchronous data streams). This is accomplished by augmenting asynchronous streams with [patten matching], so you code would reflect the following structure (concerning with the example of a social network):
+This crate provides the means to dispatch hierarchical updates, accommodating all of the requirements above. The approach is based upon the [functional reactive paradigm], a declarative paradigm concerned with asynchronous data streams. Augmenting asynchronous streams with [patten matching], your code would reflect the following structure (concerning with the example of a social network):
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/Hirrolot/mux-stream/master/media/STREAM_UPDATE_DISPATCH_STRUCTURE.png" />
