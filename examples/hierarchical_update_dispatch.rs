@@ -44,6 +44,10 @@ async fn main() {
     );
 }
 
+// There is exactly one processor for each update kind, reflecting the
+// single-responsibility principle (SRP):
+// https://en.wikipedia.org/wiki/Single-responsibility_principle
+
 async fn register_users<S>(updates: S)
 where
     S: Stream<Item = RegisterUserUpdate>,
