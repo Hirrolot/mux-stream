@@ -109,6 +109,8 @@ That is, once an update from an input stream is available, it's pushed into the 
 
 [[`examples/demux.rs`](https://github.com/Hirrolot/mux-stream/blob/master/examples/demux.rs)]
 ```rust
+
+
 use mux_stream::{demux, panicking};
 
 use futures::{future::FutureExt, StreamExt};
@@ -130,7 +132,7 @@ let stream = stream::iter(vec![
 ]);
 
 let (mut i32_stream, mut f64_stream, mut str_stream) =
-    demux!(MyEnum::A, MyEnum::B, MyEnum::C)(panicking())(stream.boxed());
+    demux!(MyEnum { A, B, C })(panicking())(stream.boxed());
 
 assert_eq!(i32_stream.next().await, Some(123));
 assert_eq!(i32_stream.next().await, Some(811));
@@ -172,11 +174,12 @@ enum MyEnum {
     C(&'static str),
 }
 
+
 let i32_values = HashSet::from_iter(vec![123, 811]);
 let u8_values = HashSet::from_iter(vec![88]);
 let str_values = HashSet::from_iter(vec!["Hello", "ABC"]);
 
-let result: UnboundedReceiver<MyEnum> = mux!(MyEnum::A, MyEnum::B, MyEnum::C)(panicking())(
+let result: UnboundedReceiver<MyEnum> = mux!(MyEnum { A, B, C })(panicking())(
     stream::iter(i32_values.clone()).boxed(),
     stream::iter(u8_values.clone()).boxed(),
     stream::iter(str_values.clone()).boxed(),

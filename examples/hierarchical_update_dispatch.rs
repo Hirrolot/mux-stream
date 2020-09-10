@@ -34,7 +34,7 @@ async fn main() {
     ]);
 
     let updates =
-        demux!(AdminUpdate::{ RegisterUser, DeleteUser, PinMessage })(panicking())(updates.boxed());
+        demux!(AdminUpdate { RegisterUser, DeleteUser, PinMessage })(panicking())(updates.boxed());
 
     dispatch!(updates => register_users, delete_users, pin_messages);
 }
