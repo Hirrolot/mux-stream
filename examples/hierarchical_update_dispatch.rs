@@ -55,7 +55,7 @@ where
         .enumerate()
         .for_each_concurrent(None, |(i, update)| async move {
             println!(
-                "Registering user #{} '{}' ({} users at all!)...",
+                "Registering user #{} '{}' ({} users registered at all!)...",
                 update.id,
                 update.username,
                 i + 1
