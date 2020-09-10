@@ -5,7 +5,7 @@ authors = ["Temirkhan Myrzamadi <hirrolot@gmail.com>"]
 edition = "2018"
 description = "Asynchronous hierarchical update dispatching for Rust"
 license = "MIT"
-categories = ["Asynchronous", "Rust patterns"]
+categories = ["asynchronous", "rust-patterns"]
 keywords = ["async", "futures", "tokio", "multiplex", "demultiplex"]
 exclude = ["media"]
 
