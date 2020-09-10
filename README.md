@@ -70,8 +70,7 @@ This is where the story begins: now you need to process user requests. Let's for
  - **Stay Rusty.** [eDSLs] implemented via macros are fun, but be ready for confusing compilation errors when business logic is expressed in terms of such eDSLs. What is more, they are computer languages on their own -- it takes some time to become familiar with them.
  - **Type safety.** Do not spread the pain of upcasting/downcasting types you're already aware of.
 
-This crate addresses the problem of dispatching hierarchical updates, accommodating all of the requirements above. The approach is based upon the [functional reactive paradigm], a declarative paradigm concerned with asynchronous data streams. Augmenting asynchronous streams with [pattern matching], your code would reflect the following structure (concerning with the example of a social network):
-
+This crate addresses the problem of dispatching hierarchical updates and, furthermore, accommodates all of the aforementioned requirements. The approach is based upon the [functional reactive paradigm], a declarative paradigm concerned with asynchronous data streams. Augmenting asynchronous streams with [pattern matching], your code would reflect the following structure (concerning with the example of a social network):
 
 [eDSLs]: https://en.wikipedia.org/wiki/Domain-specific_language
 [functional reactive paradigm]: https://en.wikipedia.org/wiki/Functional_reactive_programming
