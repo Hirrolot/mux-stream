@@ -52,8 +52,14 @@ where
     S: Stream<Item = RegisterUserUpdate>,
 {
     updates
-        .for_each_concurrent(None, |update| async move {
-            println!("Registering user #{} '{}'...", update.id, update.username);
+        .enumerate()
+        .for_each_concurrent(None, |(i, update)| async move {
+            println!(
+                "Registering user #{} '{}' ({} users at all!)...",
+                update.id,
+                update.username,
+                i + 1
+            );
         })
         .await;
 }
@@ -85,7 +91,7 @@ where
     updates
         .filter(spam)
         .for_each_concurrent(None, |update| async move {
-            println!("A private messages has come: '{}'.", update.message);
+            println!("A private messages has arrived: '{}'.", update.message);
         })
         .await;
 }
