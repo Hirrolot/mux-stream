@@ -29,6 +29,8 @@ This crate empahises the [first-class] nature of [asynchronous streams] in Rust 
 
 ## Installation
 
+Copy this into your `Cargo.toml`:
+
 ```toml
 [dependencies]
 mux-stream = "0.1"
