@@ -1,14 +1,14 @@
 use mux_stream::{demux, dispatch, panicking};
 
 use derive_more::From;
-use futures::{Stream, StreamExt};
+use futures::{future, Stream, StreamExt};
 use tokio::stream;
 
 #[derive(From)]
 enum AdminUpdate {
     RegisterUser(RegisterUserUpdate),
     DeleteUser(DeleteUserUpdate),
-    PinMessage(PinMessageUpdate),
+    PrivateMessage(PrivateMessageUpdate),
 }
 
 struct RegisterUserUpdate {
@@ -20,7 +20,7 @@ struct DeleteUserUpdate {
     id: i64,
 }
 
-struct PinMessageUpdate {
+struct PrivateMessageUpdate {
     message: String,
 }
 
@@ -29,14 +29,18 @@ async fn main() {
     let updates = stream::iter(vec![
         RegisterUserUpdate { username: "Sergey".to_owned(), id: 1414 }.into(),
         RegisterUserUpdate { username: "Ivan".to_owned(), id: 22 }.into(),
-        PinMessageUpdate { message: "Hello everyone!".to_owned() }.into(),
         DeleteUserUpdate { id: 1414 }.into(),
+        PrivateMessageUpdate { message: "Dazy has done her project.".to_owned() }.into(),
+        // These two spams will be filtered:
+        PrivateMessageUpdate { message: "Buy our magazine!!!".to_owned() }.into(),
+        PrivateMessageUpdate { message: "Learn how to code Python for free!!!".to_owned() }.into(),
     ]);
 
-    let updates =
-        demux!(AdminUpdate { RegisterUser, DeleteUser, PinMessage })(panicking())(updates.boxed());
+    let updates = demux!(AdminUpdate { RegisterUser, DeleteUser, PrivateMessage })(panicking())(
+        updates.boxed(),
+    );
 
-    dispatch!(updates => register_users, delete_users, pin_messages);
+    dispatch!(updates => register_users, delete_users, private_messages);
 }
 
 // There is exactly one processor for each update kind, reflecting the
@@ -65,13 +69,23 @@ where
         .await;
 }
 
-async fn pin_messages<S>(updates: S)
+async fn private_messages<S>(updates: S)
 where
-    S: Stream<Item = PinMessageUpdate>,
+    S: Stream<Item = PrivateMessageUpdate>,
 {
+    let spam = |update: &PrivateMessageUpdate| {
+        future::ready({
+            let lowercased = update.message.to_lowercase();
+            lowercased.contains("buy")
+                || lowercased.contains("for free")
+                || lowercased.contains("!!!")
+        })
+    };
+
     updates
+        .filter(spam)
         .for_each_concurrent(None, |update| async move {
-            println!("Pinning message '{}'...", update.message);
+            println!("A private messages has come: '{}'.", update.message);
         })
         .await;
 }
