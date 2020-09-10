@@ -21,10 +21,20 @@ This crate empahises the [first-class] nature of [asynchronous streams] in Rust 
 
 ## Table of contents
 
+ - [Installation](#installation)
  - [Motivation](#motivation)
  - [Demultiplexing](#demultiplexing)
  - [Multiplexing](#multiplexing)
  - [FAQ](#faq)
+
+## Installation
+
+```toml
+[dependencies]
+mux-stream = "0.1"
+tokio = "0.2"
+futures = "0.3"
+```
 
 ## Motivation
 
