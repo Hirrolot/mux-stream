@@ -31,7 +31,7 @@ async fn main() {
         RegisterUserUpdate { username: "Ivan".to_owned(), id: 22 }.into(),
         DeleteUserUpdate { id: 1414 }.into(),
         PrivateMessageUpdate { message: "Dazy has done her project.".to_owned() }.into(),
-        // These two spams will be filtered:
+        // These two spam letters will be filtered:
         PrivateMessageUpdate { message: "Buy our magazine!!!".to_owned() }.into(),
         PrivateMessageUpdate { message: "Learn how to code Python for free!!!".to_owned() }.into(),
     ]);
