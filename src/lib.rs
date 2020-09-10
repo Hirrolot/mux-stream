@@ -54,7 +54,7 @@ use tokio::sync::mpsc::error::SendError;
 /// let u8_values = HashSet::from_iter(vec![88]);
 /// let str_values = HashSet::from_iter(vec!["Hello", "ABC"]);
 ///
-/// let result: UnboundedReceiver<MyEnum> = mux!(MyEnum { A, B, C })(panicking())(
+/// let result: UnboundedReceiver<MyEnum> = mux!(MyEnum::{ A, B, C })(panicking())(
 ///     stream::iter(i32_values.clone()).boxed(),
 ///     stream::iter(u8_values.clone()).boxed(),
 ///     stream::iter(str_values.clone()).boxed(),
@@ -90,8 +90,8 @@ use tokio::sync::mpsc::error::SendError;
 #[macro_export]
 macro_rules! mux {
     // TODO: make the same syntax in mux-stream-macros.
-    ($enum_ty:ty { $($variant:ident),+ $(,)? }) => {
-        mux_stream_macros::mux!($(<$enum_ty>::$variant),+)
+    ($enum_ty:ident ::{ $($variant:ident),+ $(,)? }) => {
+        mux_stream_macros::mux!($($enum_ty::$variant),+)
     };
 }
 
@@ -149,7 +149,7 @@ macro_rules! mux {
 /// ]);
 ///
 /// let (mut i32_stream, mut f64_stream, mut str_stream) =
-///     demux!(MyEnum { A, B, C })(panicking())(stream.boxed());
+///     demux!(MyEnum::{ A, B, C })(panicking())(stream.boxed());
 ///
 /// assert_eq!(i32_stream.next().await, Some(123));
 /// assert_eq!(i32_stream.next().await, Some(811));
@@ -170,8 +170,8 @@ macro_rules! mux {
 #[macro_export]
 macro_rules! demux {
     // TODO: make the same syntax in mux-stream-macros.
-    ($enum_ty:ty { $($variant:ident),+ $(,)? } $(dot2:tt)?) => {
-        mux_stream_macros::demux!($dot2 $(<$enum_ty>::$variant),+)
+    ($enumeration:ident ::{ $($variant:ident),+ $(,)? } $($dot2:tt)?) => {
+        mux_stream_macros::demux!($($dot2)? $($enumeration::$variant),+)
     };
 }
 
