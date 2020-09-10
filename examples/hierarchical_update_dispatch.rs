@@ -1,4 +1,4 @@
-use mux_stream::{demux, panicking};
+use mux_stream::{demux, dispatch, panicking};
 
 use derive_more::From;
 use futures::{Stream, StreamExt};
@@ -34,11 +34,9 @@ async fn main() {
     ]);
 
     let updates =
-        demux!(AdminUpdate::RegisterUser, AdminUpdate::DeleteUser, AdminUpdate::PinMessage)(
-            panicking(),
-        )(updates.boxed());
+        demux!(AdminUpdate { RegisterUser, DeleteUser, PinMessage })(panicking())(updates.boxed());
 
-    tokio::join!(register_users(updates.0), delete_users(updates.1), pin_messages(updates.2));
+    dispatch!(updates => register_users, delete_users, pin_messages);
 }
 
 // There is exactly one processor for each update kind, reflecting the

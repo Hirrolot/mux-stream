@@ -21,7 +21,7 @@ async fn main() {
     ]);
 
     let (mut i32_stream, mut f64_stream, mut str_stream) =
-        demux!(MyEnum::A, MyEnum::B, MyEnum::C)(panicking())(stream.boxed());
+        demux!(MyEnum { A, B, C })(panicking())(stream.boxed());
 
     assert_eq!(i32_stream.next().await, Some(123));
     assert_eq!(i32_stream.next().await, Some(811));
