@@ -99,9 +99,9 @@ where
     let spam = |update: &PrivateMessageUpdate| {
         future::ready({
             let lowercased = update.message.to_lowercase();
-            lowercased.contains("buy")
+            !(lowercased.contains("buy")
                 || lowercased.contains("for free")
-                || lowercased.contains("!!!")
+                || lowercased.contains("!!!"))
         })
     };
 
