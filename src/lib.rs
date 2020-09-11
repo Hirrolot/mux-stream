@@ -179,11 +179,11 @@ macro_rules! demux {
 /// functions into [`tokio::join!`]. Returns a tuple of results of executing the
 /// specified functions concurrently.
 ///
-/// See [`examples/hierarchical_update_dispatch.rs`] as an example.
+/// See [`examples/admin_panel.rs`] as an example.
 /// TODO: provide a concise example.
 ///
 /// [`tokio::join!`]: https://docs.rs/tokio/latest/tokio/macro.join.html
-/// [`examples/hierarchical_update_dispatch.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/hierarchical_update_dispatch.rs
+/// [`examples/admin_panel.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/admin_panel.rs
 #[macro_export]
 macro_rules! dispatch {
     ($updates:ident => $( $func:ident ),+ $(,)?) => {
