@@ -34,7 +34,6 @@ Copy this into your `Cargo.toml`:
 ```toml
 [dependencies]
 mux-stream = "0.1"
-mux-stream-macros = "0.1"
 tokio = "0.2"
 futures = "0.3"
 ```

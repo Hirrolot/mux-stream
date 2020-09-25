@@ -7,6 +7,9 @@
 use futures::{future::BoxFuture, FutureExt};
 use tokio::sync::mpsc::error::SendError;
 
+#[doc(hidden)]
+pub use mux_stream_macros as macros;
+
 /// Multiplexes several streams into one.
 ///
 /// Accepts a list of variants in the form `MyEnum {VariantName0, ...,
