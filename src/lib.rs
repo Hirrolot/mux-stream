@@ -94,7 +94,7 @@ pub use mux_stream_macros as macros;
 macro_rules! mux {
     // TODO: make the same syntax in mux-stream-macros.
     ($enum_ty:path { $($variant:ident),+ $(,)? }) => {
-        mux_stream::mux_stream_macros::mux!($($enum_ty::$variant),+)
+        mux_stream::macros::mux!($($enum_ty::$variant),+)
     };
 }
 
@@ -172,7 +172,7 @@ macro_rules! mux {
 macro_rules! demux {
     // TODO: make the same syntax in mux-stream-macros.
     ($enumeration:path { $($variant:ident),+ $(,)? } $($dot2:tt)?) => {
-        mux_stream::mux_stream_macros::demux!($($dot2)? $($enumeration::$variant),+)
+        mux_stream::macros::demux!($($dot2)? $($enumeration::$variant),+)
     };
 }
 
