@@ -199,17 +199,11 @@ macro_rules! dispatch {
     };
 }
 
-#[macro_use]
-mod private_macros {
-    macro_rules! ErrorHandlerRetTy {
-        () => {
-            Box<dyn Fn(SendError<T>) -> BoxFuture<'static, ()> + Send + Sync + 'static>
-        };
-    }
-}
+pub type ErrorHandler<T> =
+    Box<dyn Fn(SendError<T>) -> BoxFuture<'static, ()> + Send + Sync + 'static>;
 
 /// A panicking error handler.
-pub fn panicking<T>() -> ErrorHandlerRetTy!()
+pub fn panicking<T>() -> ErrorHandler<T>
 where
     T: Send + 'static,
 {
@@ -217,7 +211,7 @@ where
 }
 
 /// An error handler that ignores an error.
-pub fn ignoring<T>() -> ErrorHandlerRetTy!()
+pub fn ignoring<T>() -> ErrorHandler<T>
 where
     T: Send + 'static,
 {
@@ -226,7 +220,7 @@ where
 
 /// A logging error handler.
 #[cfg(feature = "logging")]
-pub fn logging<T>() -> ErrorHandlerRetTy!()
+pub fn logging<T>() -> ErrorHandler<T>
 where
     T: Send + 'static,
 {
