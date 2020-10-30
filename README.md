@@ -82,7 +82,7 @@ This is where the story begins: now you need to process user requests. Let's for
  - **Stay Rusty.** [eDSLs] implemented via macros are fun, but be ready for confusing compilation errors when business logic is expressed in terms of such eDSLs. What is more, they are computer languages on their own -- it takes some time to become familiar with them.
  - **Type safety.** Do not spread the pain of upcasting/downcasting types you're already aware of.
 
-This crate addresses the problem of dispatching hierarchical updates and, furthermore, accommodates all of the aforementioned requirements. The approach is based upon asynchronous data streams augmented with [pattern matching]. Your code would reflect the following structure (concerning with the example of a social network):
+This crate addresses all of the aforementioned requirements. The approach is based upon asynchronous data streams augmented with [pattern matching]. Your code would reflect the following structure (concerning with the example of a social network):
 
 [eDSLs]: https://en.wikipedia.org/wiki/Domain-specific_language
 [pattern matching]: https://en.wikipedia.org/wiki/Pattern_matching
