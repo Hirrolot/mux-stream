@@ -102,7 +102,7 @@ That is, each function takes a stream of updates and propagates (demultiplexes, 
 
 [stream adaptors]: https://docs.rs/futures/0.3.5/futures/stream/trait.StreamExt.html
 
-The following sections present the _demultiplexing_ & _multiplexing_ operations on streams, providing some explanatory examples. See also [`examples/admin_panel.rs`], an elaborated demonstration of the most prominent aspects of the paradigm.
+The sections below are dedicated to demultiplexing and multiplexing separately. See also [`examples/admin_panel.rs`], an elaborated demonstration of the most prominent aspects of the paradigm.
 
 [`examples/admin_panel.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/admin_panel.rs
 
