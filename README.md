@@ -33,7 +33,7 @@ Copy this into your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mux-stream = "0.1"
+mux-stream = "0.2"
 tokio = "0.3"
 futures = "0.3"
 ```
