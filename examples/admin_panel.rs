@@ -48,8 +48,9 @@ async fn main() {
     //
     // `panicking()` means that if the demultiplexer fails to redirect an element of
     // the input stream into one of the output streams, it'll panic.
-    let updates = demux!(AdminUpdate { UserRegistered, UserDeleted, PrivateMessage })(panicking())(
+    let updates = demux!(AdminUpdate { UserRegistered, UserDeleted, PrivateMessage })(
         updates.boxed(),
+        panicking(),
     );
 
     // Pass the stream:
