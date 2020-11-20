@@ -18,16 +18,18 @@ pub use mux_stream_macros as macros;
 /// Expands to:
 ///
 /// ```ignore
-/// |error_handler: Box<dyn Fn(tokio::sync::mpsc::error::SendError<_>) -> futures::future::BoxFuture<'static, ()> + Send + Sync + 'static>| {
-///     |input_stream0: futures::stream::BoxStream<'static, _>, ...  | { /* ... */ }
+/// |input_stream_0, ..., error_handler: Box<dyn Fn(tokio::sync::mpsc::error::SendError<_>)
+///     -> futures::future::BoxFuture<'static, ()> + Send + Sync + 'static>| {
+///     /* ... */
 /// }
 /// ```
 ///
-/// Thus, the returned closure is [curried]. After applying the first argument
-/// to it, you obtain a closure of as many formal arguments as variants
-/// specified, each parameterised by the corresponding type of variant's
-/// parameter. After applying the second argument, you obtain
-/// [`UnboundedReceiver`] of your enumeration type.
+/// This, the returned closure accepts many input streams of type
+/// [`tokio::sync::mpsc::UnboundedReceiver`] parameterised by the corresponding
+/// variant's type and an error handler. The count of input streams is the count
+/// of variants specified. An error handler is invoked when the multiplexer
+/// fails to propagate an update from one of input streams to an output stream.
+/// See also [our default error handlers].
 ///
 /// It propagates updates into the result stream in any order, simultaneously
 /// from all the provided input streams (in a separate [Tokio task]). Updates
@@ -87,12 +89,10 @@ pub use mux_stream_macros as macros;
 /// Hash sets are used here owing to the obvious absence of order preservation
 /// of updates from input streams.
 ///
-/// [curried]: https://en.wikipedia.org/wiki/Currying
-/// [`UnboundedReceiver`]: https://docs.rs/tokio/latest/tokio/sync/mpsc/struct.UnboundedReceiver.html
-/// [Tokio task]: https://docs.rs/tokio/latest/tokio/task/index.html
+/// [Tokio task]: tokio::task
+/// [our default error handlers]: crate::error_handler
 #[macro_export]
 macro_rules! mux {
-    // TODO: make the same syntax in mux-stream-macros.
     ($enum_ty:path { $($variant:ident),+ $(,)? }) => {
         mux_stream::macros::mux!($enum_ty { $($variant),+ })
     };
@@ -107,14 +107,14 @@ macro_rules! mux {
 /// Expands to:
 ///
 /// ```ignore
-/// |error_handler: Box<dyn Fn(tokio::sync::mpsc::error::SendError<_>) -> futures::future::BoxFuture<'static, ()> + Send + Sync + 'static>| {
-///     |input_stream: futures::stream::BoxStream<'static, _>| { /* ... */ }
+/// |input_stream, error_handler: Box<dyn Fn(tokio::sync::mpsc::error::SendError<_>)
+///     -> futures::future::BoxFuture<'static, ()> + Send + Sync + 'static>| {
+///     { /* ... */ }
 /// }
 /// ```
 ///
-/// Thus, the returned closure is [curried]. After applying two arguments to it
-/// (`(...)(...)`), you obtain `(tokio::sync::mpsc::UnboundedReceiver<T[1]>,
-/// ..., tokio::sync::mpsc::UnboundedReceiver<T[n]>)`, where `T[i]` is a type of
+/// This closure returns `(tokio::sync::mpsc::UnboundedReceiver<T[1]>, ...,
+/// tokio::sync::mpsc::UnboundedReceiver<T[n]>)`, where `T[i]` is a type of
 /// a single unnamed parameter of the corresponding provided variant.
 ///
 /// `input_stream` is a stream of your enumeration to be demiltiplexed. Each
@@ -165,9 +165,8 @@ macro_rules! mux {
 /// # }
 /// ```
 ///
-/// [curried]: https://en.wikipedia.org/wiki/Currying
-/// [Tokio task]: https://docs.rs/tokio/latest/tokio/task/index.html
-/// [our default error handlers]: https://docs.rs/mux-stream
+/// [Tokio task]: tokio::task
+/// [our default error handlers]: crate::error_handler
 #[macro_export]
 macro_rules! demux {
     ($enumeration:path { $($variant:ident),+ $(,)? } $($dot2:tt)?) => {
@@ -184,7 +183,7 @@ macro_rules! demux {
 /// See [`examples/admin_panel.rs`] as an example.
 /// TODO: provide a concise example.
 ///
-/// [`tokio::join!`]: https://docs.rs/tokio/latest/tokio/macro.join.html
+/// [`tokio::join!`]: tokio::join
 /// [`examples/admin_panel.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/admin_panel.rs
 #[macro_export]
 macro_rules! dispatch {
