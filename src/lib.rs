@@ -4,8 +4,7 @@
 
 #![deny(unsafe_code)]
 
-use futures::{future::BoxFuture, FutureExt};
-use tokio::sync::mpsc::error::SendError;
+pub mod error_handler;
 
 #[doc(hidden)]
 pub use mux_stream_macros as macros;
@@ -36,7 +35,7 @@ pub use mux_stream_macros as macros;
 /// stream is active.
 ///
 /// ```
-/// use mux_stream::{mux, panicking};
+/// use mux_stream::{error_handler, mux};
 ///
 /// use std::{collections::HashSet, iter::FromIterator};
 ///
@@ -61,7 +60,7 @@ pub use mux_stream_macros as macros;
 ///     stream::iter(i32_values.clone()),
 ///     stream::iter(u8_values.clone()),
 ///     stream::iter(str_values.clone()),
-///     panicking(),
+///     error_handler::panicking(),
 /// );
 ///
 /// let (i32_results, u8_results, str_results) = result
@@ -128,7 +127,7 @@ macro_rules! mux {
 ///
 /// # Example
 /// ```
-/// use mux_stream::{demux, panicking};
+/// use mux_stream::{demux, error_handler};
 ///
 /// use futures::{future::FutureExt, StreamExt};
 /// use tokio::stream;
@@ -151,7 +150,7 @@ macro_rules! mux {
 /// ]);
 ///
 /// let (mut i32_stream, mut f64_stream, mut str_stream) =
-///     demux!(MyEnum { A, B, C })(stream, panicking());
+///     demux!(MyEnum { A, B, C })(stream, error_handler::panicking());
 ///
 /// assert_eq!(i32_stream.next().await, Some(123));
 /// assert_eq!(i32_stream.next().await, Some(811));
@@ -197,37 +196,4 @@ macro_rules! dispatch {
             }
         }
     };
-}
-
-pub type ErrorHandler<T> =
-    Box<dyn Fn(SendError<T>) -> BoxFuture<'static, ()> + Send + Sync + 'static>;
-
-/// A panicking error handler.
-pub fn panicking<T>() -> ErrorHandler<T>
-where
-    T: Send + 'static,
-{
-    Box::new(|error| async move { panic!(error) }.boxed())
-}
-
-/// An error handler that ignores an error.
-pub fn ignoring<T>() -> ErrorHandler<T>
-where
-    T: Send + 'static,
-{
-    Box::new(|_error| async move {}.boxed())
-}
-
-/// A logging error handler.
-#[cfg(feature = "logging")]
-pub fn logging<T>() -> ErrorHandler<T>
-where
-    T: Send + 'static,
-{
-    Box::new(|error| {
-        async move {
-            log::error!("{}", error);
-        }
-        .boxed()
-    })
 }

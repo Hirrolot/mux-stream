@@ -1,4 +1,4 @@
-use mux_stream::{demux, dispatch, panicking};
+use mux_stream::{demux, dispatch, error_handler};
 
 use derive_more::From;
 use futures::{future, Stream, StreamExt};
@@ -50,7 +50,7 @@ async fn main() {
     // the input stream into one of the output streams, it'll panic.
     let updates = demux!(AdminUpdate { UserRegistered, UserDeleted, PrivateMessage })(
         updates.boxed(),
-        panicking(),
+        error_handler::panicking(),
     );
 
     // Pass the stream:

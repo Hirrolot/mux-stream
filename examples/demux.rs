@@ -1,4 +1,4 @@
-use mux_stream::{demux, panicking};
+use mux_stream::{demux, error_handler};
 
 use futures::StreamExt;
 use tokio::stream;
@@ -21,7 +21,7 @@ async fn main() {
     ]);
 
     let (mut i32_stream, mut f64_stream, mut str_stream) =
-        demux!(MyEnum { A, B, C })(stream, panicking());
+        demux!(MyEnum { A, B, C })(stream, error_handler::panicking());
 
     assert_eq!(i32_stream.next().await, Some(123));
     assert_eq!(i32_stream.next().await, Some(811));

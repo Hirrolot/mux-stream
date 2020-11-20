@@ -1,4 +1,4 @@
-use mux_stream::{mux, panicking};
+use mux_stream::{error_handler, mux};
 
 use std::{collections::HashSet, iter::FromIterator};
 
@@ -22,7 +22,7 @@ async fn main() {
         stream::iter(i32_values.clone()),
         stream::iter(u8_values.clone()),
         stream::iter(str_values.clone()),
-        panicking(),
+        error_handler::panicking(),
     );
 
     let (i32_results, u8_results, str_results) = result
