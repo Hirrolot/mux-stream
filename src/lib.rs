@@ -170,7 +170,7 @@ macro_rules! mux {
 #[macro_export]
 macro_rules! demux {
     ($enumeration:path { $($variant:ident),+ $(,)? } $($dot2:tt)?) => {
-        mux_stream::macros::demux!($enumeration { $($variant),+ } $($dot2:tt)?)
+        mux_stream::macros::demux!($enumeration { $($variant),+ } $($dot2)?)
     };
 }
 
@@ -183,7 +183,6 @@ macro_rules! demux {
 /// See [`examples/admin_panel.rs`] as an example.
 /// TODO: provide a concise example.
 ///
-/// [`tokio::join!`]: tokio::join
 /// [`examples/admin_panel.rs`]: https://github.com/Hirrolot/mux-stream/blob/master/examples/admin_panel.rs
 #[macro_export]
 macro_rules! dispatch {
