@@ -17,7 +17,7 @@ exclude = ["media"]
 logging = ["log"]
 
 [dependencies]
-mux-stream-macros = "0.3.1"
+mux-stream-macros = "0.3.2"
 tokio = { version = "0.3", features = ["rt", "rt-multi-thread", "sync", "stream", "macros"] }
 futures = "0.3"
 log = { version = "0.4", optional = true }

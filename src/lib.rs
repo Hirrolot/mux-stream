@@ -11,7 +11,7 @@ pub use mux_stream_macros as macros;
 
 /// Multiplexes several streams into one.
 ///
-/// Accepts a list of variants in the form `MyEnum {VariantName0, ...,
+/// Accepts a list of variants in the form `MyEnumPath {VariantName0, ...,
 /// VariantNameN}`. All enumeration variants shall be defined as variants taking
 /// a single unnamed parameter.
 ///
@@ -100,7 +100,7 @@ macro_rules! mux {
 
 /// Demultiplexes a stream into several others.
 ///
-/// Accepts a non-empty list of variants in the form `MyEnum {VariantName0,
+/// Accepts a non-empty list of variants in the form `MyEnumPath {VariantName0,
 /// ..., VariantNameN}`. `..` can be appended to input if you wish
 /// non-exhaustive demultiplexing (e.g. just ignore unspecified variants).
 ///
